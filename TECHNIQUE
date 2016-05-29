@@ -1,0 +1,35 @@
+    One programming technique which both of us have incorporated into 
+our programming practice since the start of the term is test-driven
+development. Test-driven development is the practice of thinking about
+and creating test cases and goals for a program before actually writing
+meaningful code.
+
+    By creating and thinking about test cases beforehand, we are more
+aware of what the program has to do and what situations it has to 
+handle. This means that edge cases and unusual inputs are more apparent
+to us while writing the program, meaning that we save time debugging
+the program later.
+
+    Test-driven development starts by looking at the overall
+input and output of the program and breaking it up into smaller 
+i/o fuctionalities. Not only is it important to have tests for the 
+whole program, but to have intermittent goals and test cases for inner
+modules. This can prevent small errors from becoming large time drains.
+
+    Furthermore, it is important that you have a strong understanding 
+of how your program should react to different scenarios, so that you 
+can write meaningful test cases with useful and insigntful outputs. 
+Tests should cover all manners of good, bad, and unusual inputs,
+and detail how the program should respond. 
+
+    These tests include valid inputs that are intended to work 
+perfectly, extremely large inputs that test the scalability and runtime
+of your program, empty or nonexistant inputs, poorly-formatted inputs,
+and inputs that may cause a violation of the spec.
+
+    All edge cases should covered, and you should find inputs that try
+to purposely break the program. Knowing these program-breaking inputs 
+BEFORE coding guides the design process to accommodate for these inputs
+and handle them more elegantly. This leads to cleaner, clearer, and 
+more efficient code, not just in runtime, but also in maintenance
+and debugging.

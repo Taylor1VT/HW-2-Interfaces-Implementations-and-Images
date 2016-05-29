@@ -1,0 +1,235 @@
+###############################
+### PART A DESIGN CHECKLIST ###
+###############################
+
+What is the abstract thing you are trying to represent? 
+Often the answer will be in terms of sets, sequences, 
+finite maps, and/or objects in the world. 
+Always the answer is client-oriented.
+
+    A two-dimensional unboxed array.
+
+What functions will you offer, and what are the contracts those functions 
+must meet?
+
+    T Uarray2_new(int width, int height, int size);
+        Allocates, initializes, and returns a new array of size elements with
+            bounds zero through (width * height) - 1 (unless this value is 
+            zero, in which case the array has no elements).
+    void Uarray2_free(T *uarray);
+        Deallocates and clears *uarray.
+    int UArray2_width(T uarray);
+        Returns the number of columns of the two-dimensional uarray.
+    int UArray2_height(T uarray);
+        Returns the number of rows of the two-dimensional uarray.
+    int UArray2_size(T uarray);
+        Returns the size of the elements in the array.
+    void* UArray2_at(T uarray, int col, int row);
+        Returns a pointer to the element in [col,row].
+    void UArray2_map_row_major
+        (T uarray, map(int col, int row, T uarray, void* val, void* cl), void* cl);
+        Applies function 'map' to elements of uarray in row-major order.
+        Function ‘map’ is allowed to change elements of the array.
+    void UArray2_map_col_major
+        (T uarray, map(int col, int row, T uarray, void* val, void* cl), void* cl);
+        Applies function 'map' to elements of uarray in column-major order.
+        Function ‘map’ is allowed to change elements of the array.
+
+What examples do you have of what the functions are supposed to do?
+
+    Uarray2 arr = Uarray2_new(width, height, size); /*creates array*/
+
+    int width = 3;
+    int height = 2;
+    int size = 8;
+    UArray_at(arr, 0, 0)* = 1;
+    UArray_at(arr, 0, 1)* = 2;
+    UArray_at(arr, 1, 0)* = 3;
+    UArray_at(arr, 1, 1)* = 4;
+    UArray_at(arr, 2, 0)* = 5;
+    UArray_at(arr, 2, 1)* = 6;
+
+    /* Two-dimensional Array: 1 3 5 
+                         2 4 6 */
+
+    UArray2_width(arr); /*returns 3*/
+    UArray2_height(arr); /*returns 2*/
+    UArray2_size(arr); /*returns 8*/
+    UArray2_at(arr, 1, 1); /*returns the element
+                             in index [1,1], which is 4 */
+
+    void print(int col, int row, void *val, void *cl) 
+    {
+        printf("%d", (int) val);
+    }
+
+    UArray2_map_row_major(arr, print, NULL);
+        /* print in row order: 1 3 5 2 4 6 */
+    UArray2_map_col_major(arr, print, NULL);
+        /* print in column order: 1 2 3 4 5 6 */
+    Uarray2_free(&arr); /*deallocates and clears the array*/
+
+What representation will you use, and what invariants will it satisfy? 
+(This question is especially important to answer precisely.)
+
+    A one-dimensional Hanson unboxed array with length width * height.
+
+    Invariants: 
+
+        For a given row in the two-dimensional array, all of the elements from 
+            previous rows appear at smaller indices in the corresponding 
+            one-dimensional array. 
+
+        Within a given row in the two-dimensional array, consectutive elements
+            appear in the same consectutive order in the corresponding 
+            one-dimensional array. 
+
+        Reading the one-dimensional array sequentially from 
+            index 0 to index (width * height) - 1 will print the 
+            two-dimensional array in row-major order.
+
+How does an object in your representation correspond to an object 
+in the world of ideas? That is, what is the inverse mapping 
+from any particular representation to the abstraction that it 
+represents. 
+(This question is also especially important to answer precisely.)
+
+    The NULL pointer represents the empty array.
+
+    A nonnull pointer p represents an object in a two-dimensional uarray
+        at index [col, row]. This same pointer is mapped to the corresponding 
+        one-dimensional uarray using the formula: 
+        index = (width_of_array * row) + col.
+
+What test cases have you devised?
+
+    Accessing out of bounds indices.
+    Accessing all in-bounds indices.
+    Storing objects of varying sizes.
+    Behavior of program if trying to access 'dead squirrels'.
+    Storing pointers to pointers (multiple levels of indirection).
+    Passing map functions that modify the data.
+
+What programming idioms will you need?
+
+    The idiom for allocating and initializing pointers to Hanson UArrays.
+    The idiom for the relationship between two-dimensional coordinates and 
+        one-dimensional indices.
+    The idiom for creating an abstract type from simpler ones.
+    The idiom for type abbreviations for structure types.
+    The idiom for handling void* values of known type.
+    The idiom for initializing array elements.
+
+###############################
+### PART B DESIGN CHECKLIST ###
+###############################
+
+What is the abstract thing you are trying to represent? 
+Often the answer will be in terms of sets, sequences, 
+finite maps, and/or objects in the world. 
+Always the answer is client-oriented.
+
+    A two-dimensional array of bits.    
+
+What functions will you offer, and what are the contracts those functions 
+must meet?
+
+    T Bit2_new(int width, int height);
+        Returns a pointer to new two-dimensional array of bits, 
+            all initialized to 0.
+    void Bit2_free(T *bit_array);
+        Deallocates and clears *bit_array.
+    int Bit2_count(T bit_array);
+        Returns the number of ‘ON’ bits in bit_array.
+    int Bit2_width(T bit_array);
+        Returns the number of columns of the two-dimensional bit array.
+    int Bit2_height(T bit_array);
+        Returns the number of rows of the two-dimensional bit array.
+    int Bit2_get(T bit_array, int n);
+        Returns the status of bit n
+    int Bit2_put(T bit_array, int n, int bit);
+        Sets the status of the bit at location n. Bit can only be 0 or 1.
+    void Bit2_map_row_major
+        (T bit_array, map(int col, int row, T bit_array, void* val, void* cl), void* cl);
+        Applies function 'map' to elements of bit_arr in row-major order. 
+        Function ‘map’ is allowed to change elements of the array.
+    void Bit2_map_column_major
+        (T bit_array, map(int col, int row, T bit_array, void* val, void* cl), void* cl);
+        Applies function 'map' to elements of bit_arr in column-major order.
+        Function ‘map’ is allowed to change elements of the array.
+
+What examples do you have of what the functions are supposed to do?
+
+Bit2_T bit_array = Bit2_new(width, height);
+
+/* bit_array is now: 0 0 0 
+                     0 0 0 */
+
+Bit2_count(bit_array); /* returns 0 (all elements are 0) */
+Bit2_put(bit_array, 2, 1, 1); /* set bit at column 2, row 1 to 1 */
+Bit2_get(bit_array, 2, 1); /* returns 1 */
+
+/* bit_array is now: 0 0 0 
+                     0 0 1 */
+
+void toggle(int col, int row, void *bit, void *cl)
+{
+    int stat = *((int) bit)
+    int new = (stat) ? 0 : 1;
+    *bit = new;
+}
+
+Bit2_map_row_major(bit_array, toggle, NULL);
+
+/* bit_array is now: 1 1 1
+                     1 1 0 */
+
+Bit2_free(&bit_array); /* deallocates bit array */
+
+What representation will you use, and what invariants will it satisfy? 
+(This question is especially important to answer precisely.)
+
+    A one-dimensional Hanson bit vector with length width * height.
+
+    Invariants: 
+
+        For a given row in the two-dimensional array, all of the elements from
+            previous rows appear at smaller indices in the corresponding 
+            one-dimensional array. 
+
+        Within a given row in the two-dimensional array, consecutive elements 
+            appear in the same consecutive order in the corresponding 
+            one-dimensional array. 
+
+        Reading the one-dimensional bit vector sequentially from 
+            index 0 to index (width * height) - 1 will print the 
+            two-dimensional array in row-major order.
+
+How does an object in your representation correspond to an object 
+in the world of ideas? That is, what is the inverse mapping 
+from any particular representation to the abstraction that it 
+represents. 
+(This question is also especially important to answer precisely.)
+
+    The NULL pointer represents the empty array.
+
+    A nonnull pointer p represents the bit in a two-dimensional array 
+        of bits at index [col, row]. This same pointer is mapped to the 
+        corresponding one-dimensional array of bits using the formula:
+        index = (width_of_array * row) + col.
+
+What test cases have you devised?
+
+    Accessing out of bounds indices.
+    Accessing all in-bounds indices.
+    Storing pointers to pointers (multiple levels of indirection).
+    Passing map functions that modify the data.
+
+What programming idioms will you need?
+
+    The idiom for the relationship between two-dimensional coordinates and 
+        one-dimensional indices.
+    The idiom for creating an abstract type from simpler ones.
+    The idiom for type abbreviations for structure types.
+    The idiom for handling void* values of known type.
+    The idiom for initializing array elements.
